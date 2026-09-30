@@ -1,4 +1,4 @@
-const prompt = require("prompt-sync")();
+/* Version Web */
 
 const MESSAGES = {
   first: "Write a random number",
@@ -18,9 +18,32 @@ const quizAndGetNumber = (message) => {
   return Number(num);
 };
 
+const changeTextBtn = () => {
+  document.querySelector(".btn-text").innerText = "Try again!";
+};
+
+const reset = () => {
+  const content = document.getElementById("content");
+  content.classList.add("hidden");
+
+  const info = document.getElementById("information");
+  if (!info) return;
+  info.replaceChildren();
+};
+
 const allNumbersIsEqual = (list) => list.every((item) => item === list[0]);
 
+const createParagraph = (text) => {
+  const newElement = document.createElement("p");
+  const newContent = document.createTextNode(text);
+  newElement.appendChild(newContent);
+  const info = document.getElementById("information");
+  if (!info) return;
+  info.appendChild(newElement);
+};
+
 const getNumbers = () => {
+  reset();
   const numbers = [];
 
   /* First Number */
@@ -30,12 +53,19 @@ const getNumbers = () => {
   /* Last Number */
   numbers.push(quizAndGetNumber(MESSAGES.thrid));
 
-  if (allNumbersIsEqual(numbers) === true) return `All numbers is equal (${numbers[0]})`;
-  //   const sorted = numbers.sort((a, b) => a - b);
-  const numbersAsc = numbers.sort((a, b) => a - b).join(', ');
-  const numbersDesc = numbers.sort((a, b) => b - a).join(', ');
+  const content = document.getElementById("content");
+  content.classList.remove("hidden");
 
-  return `Numbers Desc: ${numbersDesc}\nNumbers Asc: ${numbersAsc}\n`;
+  if (allNumbersIsEqual(numbers) === true) {
+    createParagraph(`All numbers is equal (${numbers[0]})`);
+    changeTextBtn();
+    return;
+  }
+
+  const numbersAsc = numbers.sort((a, b) => a - b).join(", ");
+  const numbersDesc = numbers.sort((a, b) => b - a).join(", ");
+
+  createParagraph(`Numbers Desc: ${numbersDesc}`);
+  createParagraph(`Numbers Desc: ${numbersAsc}`);
+  changeTextBtn();
 };
-
-console.log(getNumbers());
